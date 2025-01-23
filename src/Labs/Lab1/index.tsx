@@ -305,17 +305,17 @@ export default function Lab1() {
       </div>
       <div id="wd-anchor-tag">
         <h4>Anchor tag</h4>
-        Please
+        {"Please "}
         <a href="https://www.lipsum.com" id="wd-lipsum">
           click here
         </a>
-        to get dummy text
+        {" to get dummy text"}
         <br />
-        Please
-        <a href="IMPLEMENT AFTER GIT REPO CREATED" id="wd-github">
+        {"Please "}
+        <a href="https://github.com/Frizame/kambaz-react-web-app" id="wd-github">
           click here
         </a>
-        to open git repo!!!!!!!!!!!!!!!!
+        {" to open git repo"}
         <br />
       </div>
     </div>
