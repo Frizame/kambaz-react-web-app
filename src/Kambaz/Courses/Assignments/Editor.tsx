@@ -1,5 +1,3 @@
-import { Link } from "react-router";
-
 export default function AssignmentEditor() {
   return (
     <div id="wd-assignments-editor">
