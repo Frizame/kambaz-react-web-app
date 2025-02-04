@@ -6,6 +6,14 @@ import Lab3 from "./Lab3";
 export default function Labs() {
   return (
     <div>
+      Caden Elghazal
+      <br />
+      Section 2
+      <br />
+      <a href="https://github.com/Frizame/kambaz-react-web-app" id="wd-github">
+        Git Repo
+      </a>
+
       <h1>Labs</h1>
       <TOC />
       <Routes>
