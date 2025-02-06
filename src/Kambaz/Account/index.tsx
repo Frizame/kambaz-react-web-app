@@ -7,7 +7,8 @@ import AccountNavigation from "./Navigation";
 export default function Account() {
   return (
     <div id="wd-account-screen">
-      <h2>Account</h2>
+      <h1>Account</h1>
+      <hr className="mb3"/>
       <table>
         <tr>
           <td valign="top">
