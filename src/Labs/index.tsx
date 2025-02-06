@@ -10,9 +10,6 @@ export default function Labs() {
       <br />
       Section 2
       <br />
-      <a href="https://github.com/Frizame/kambaz-react-web-app" id="wd-github">
-        Git Repo
-      </a>
 
       <h1>Labs</h1>
       <TOC />

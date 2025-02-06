@@ -2,11 +2,12 @@ import { Link } from "react-router-dom";
 import { AiOutlineDashboard } from "react-icons/ai";
 import { IoCalendarOutline } from "react-icons/io5";
 import { LiaBookSolid, LiaCogSolid } from "react-icons/lia";
-import { FaInbox, FaRegCircleUser } from "react-icons/fa6";
+import { FaBars, FaInbox, FaRegCircleUser } from "react-icons/fa6";
+import CourseNavigation from "./Courses/Navigation";
 import "./style.css";
 import { FaHome } from "react-icons/fa";
 
-export default function KambazNavigation() {
+export default function KambazNavigationWithCourses() {
   return (
     <>
       <div
@@ -104,7 +105,18 @@ export default function KambazNavigation() {
               aria-label="Toggle navigation"
             >
               <FaHome />
-              <span className="ms-2 text-white"></span>
+            </button>
+
+            <button
+              className="navbar-toggler ms-auto shadow-none"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#courseNavigation"
+              aria-controls="courseNavigation"
+              aria-expanded="false"
+            >
+
+              <FaBars />
             </button>
           </div>
         </nav>
@@ -181,6 +193,15 @@ export default function KambazNavigation() {
               </Link>
             </div>
           </div>
+        </div>
+        <div
+          className="collapse d-md-none wd-main-content-offset-top"
+          id="courseNavigation"
+        >
+          <div className="card card-body">
+            <CourseNavigation />
+          </div>
+          <br />
         </div>
       </div>
     </>
