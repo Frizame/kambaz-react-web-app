@@ -1,0 +1,236 @@
+[
+  {
+    "_id": "M101",
+    "name": "Introduction to Rocket Propulsion",
+    "description": "Basic principles of rocket propulsion and rocket engines.",
+    "course": "RS101",
+    "lessons": [
+      {
+        "_id": "L101",
+        "name": "History of Rocketry",
+        "description": "A brief history of rocketry and space exploration.",
+        "module": "M101"
+      },
+      {
+        "_id": "L102",
+        "name": "Rocket Propulsion Fundamentals",
+        "description": "Basic principles of rocket propulsion.",
+        "module": "M101"
+      },
+      {
+        "_id": "L103",
+        "name": "Rocket Engine Types",
+        "description": "Overview of different types of rocket engines.",
+        "module": "M101"
+      }
+    ]
+  },
+  {
+    "_id": "M102",
+    "name": "Fuel and Combustion",
+    "description": "Understanding rocket fuel, combustion processes, and efficiency.",
+    "course": "RS101",
+    "lessons": [
+      {
+        "_id": "L201",
+        "name": "Rocket Fuel",
+        "description": "Overview of different types of rocket fuels.",
+        "module": "M102"
+      },
+      {
+        "_id": "L202",
+        "name": "Combustion Processes",
+        "description": "Understanding combustion processes and efficiency.",
+        "module": "M102"
+      },
+      {
+        "_id": "L203",
+        "name": "Combustion Instability",
+        "description": "Understanding combustion instability and mitigation.",
+        "module": "M102"
+      }
+    ]
+  },
+  {
+    "_id": "M103",
+    "name": "Nozzle Design",
+    "description": "Principles of rocket nozzle design and performance optimization.",
+    "course": "RS101",
+    "lessons": [
+      {
+        "_id": "L301",
+        "name": "Nozzle Design",
+        "description": "Overview of different types of rocket nozzles.",
+        "module": "M103"
+      },
+      {
+        "_id": "L302",
+        "name": "Nozzle Performance",
+        "description": "Understanding nozzle performance and efficiency.",
+        "module": "M103"
+      },
+      {
+        "_id": "L303",
+        "name": "Nozzle Optimization",
+        "description": "Optimizing nozzle design for specific applications.",
+        "module": "M103"
+      }
+    ]
+  },
+  {
+    "_id": "M201",
+    "name": "Fundamentals of Aerodynamics",
+    "description": "Basic aerodynamic concepts and fluid dynamics principles.",
+    "course": "RS102",
+    "lessons": [
+      {
+        "_id": "L101",
+        "name": "Introduction to Aerodynamics",
+        "description": "Fundamental concepts of aerodynamics and their applications.",
+        "module": "M201"
+      },
+      {
+        "_id": "L102",
+        "name": "Basic Fluid Dynamics",
+        "description": "Exploration of fluid dynamics principles relevant to aerodynamics.",
+        "module": "M201"
+      },
+      {
+        "_id": "L103",
+        "name": "Airflow Analysis",
+        "description": "Techniques for analyzing airflow over surfaces.",
+        "module": "M201"
+      }
+    ]
+  },
+  {
+    "_id": "M202",
+    "name": "Subsonic and Supersonic Flow",
+    "description": "Understanding subsonic and supersonic aerodynamic behaviors.",
+    "course": "RS102",
+    "lessons": [
+      {
+        "_id": "L201",
+        "name": "Subsonic Flow Characteristics",
+        "description": "Detailed look at characteristics of subsonic flows.",
+        "module": "M202"
+      },
+      {
+        "_id": "L202",
+        "name": "Transition to Supersonic Flow",
+        "description": "Study of transition phenomena between subsonic and supersonic speeds.",
+        "module": "M202"
+      },
+      {
+        "_id": "L203",
+        "name": "Supersonic Flow Challenges",
+        "description": "Examination of challenges and design considerations in supersonic flow.",
+        "module": "M202"
+      }
+    ]
+  },
+  {
+    "_id": "M203",
+    "name": "Aerodynamic Heating",
+    "description": "Study of aerodynamic heating and thermal protection systems.",
+    "course": "RS102",
+    "lessons": [
+      {
+        "_id": "L301",
+        "name": "Introduction to Aerodynamic Heating",
+        "description": "Basic principles of heating in aerodynamic environments.",
+        "module": "M203"
+      },
+      {
+        "_id": "L302",
+        "name": "Thermal Analysis",
+        "description": "Methods and techniques for thermal analysis in high-speed flows.",
+        "module": "M203"
+      },
+      {
+        "_id": "L303",
+        "name": "Thermal Protection Systems",
+        "description": "Overview of systems used to protect structures from aerodynamic heating.",
+        "module": "M203"
+      }
+    ]
+  },
+  {
+    "_id": "M301",
+    "name": "Spacecraft Structural Design",
+    "description": "Fundamentals of designing spacecraft structures and materials selection.",
+    "course": "RS103",
+    "lessons": [
+      {
+        "_id": "L101",
+        "name": "Introduction to Structural Design",
+        "description": "Fundamentals of spacecraft structure and design criteria.",
+        "module": "M301"
+      },
+      {
+        "_id": "L102",
+        "name": "Material Selection",
+        "description": "Overview of materials used in spacecraft construction.",
+        "module": "M301"
+      },
+      {
+        "_id": "L103",
+        "name": "Structural Analysis Techniques",
+        "description": "Methods for analyzing spacecraft structural integrity.",
+        "module": "M301"
+      }
+    ]
+  },
+  {
+    "_id": "M302",
+    "name": "Orbital Mechanics",
+    "description": "Understanding orbital dynamics and mission planning.",
+    "course": "RS103",
+    "lessons": [
+      {
+        "_id": "L201",
+        "name": "Orbital Dynamics Basics",
+        "description": "Introduction to the principles of orbital mechanics.",
+        "module": "M302"
+      },
+      {
+        "_id": "L202",
+        "name": "Trajectory Planning",
+        "description": "Techniques for planning spacecraft trajectories.",
+        "module": "M302"
+      },
+      {
+        "_id": "L203",
+        "name": "Orbital Maneuvers",
+        "description": "Overview of common orbital maneuvers and their applications.",
+        "module": "M302"
+      }
+    ]
+  },
+  {
+    "_id": "M303",
+    "name": "Spacecraft Systems Engineering",
+    "description": "Overview of spacecraft systems and subsystems engineering.",
+    "course": "RS103",
+    "lessons": [
+      {
+        "_id": "L301",
+        "name": "Systems Integration",
+        "description": "Fundamentals of integrating various spacecraft systems.",
+        "module": "M303"
+      },
+      {
+        "_id": "L302",
+        "name": "Subsystem Overview",
+        "description": "Detailed look at spacecraft subsystems and their functions.",
+        "module": "M303"
+      },
+      {
+        "_id": "L303",
+        "name": "Testing and Validation",
+        "description": "Processes for testing and validating spacecraft systems.",
+        "module": "M303"
+      }
+    ]
+  }
+]

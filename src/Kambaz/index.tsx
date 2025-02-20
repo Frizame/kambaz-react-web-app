@@ -8,13 +8,11 @@ import "./style.css";
 // Bootstrap imports for collapsed menus
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import KambazNavigationWithCourses from "./NavigationCourses";
 
 export default function Kambaz() {
   return (
     <div id="wd-kambaz">
       <Routes>
-        <Route path="/Courses/:cid/*" element={<KambazNavigationWithCourses />}></Route>
         <Route path="/*" element={<KambazNavigation />}></Route>
       </Routes>
 

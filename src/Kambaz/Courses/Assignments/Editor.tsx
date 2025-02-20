@@ -1,18 +1,28 @@
 import { Button, Form, Row, Col } from "react-bootstrap";
+import { useParams } from "react-router-dom";
+import * as db from "../../Database";
 
 export default function AssignmentEditor() {
+  const { aid } = useParams();
+  const assignments = db.assignments;
+
   return (
     <Form id="wd-assignments-editor">
       <Form.Group className="mb-3" controlId="wd-name">
         <Form.Label>Assignment Name</Form.Label>
-        <Form.Control type="text" defaultValue="A1" />
+        <Form.Control
+          type="text"
+          defaultValue={
+            assignments.find((assignment) => assignment._id === aid)?.title
+          }
+        />
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="wd-description">
         <Form.Control
           as="textarea"
           rows={3}
-          defaultValue="The assignment is available online Submit a link to the landing page of"
+          defaultValue="Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipitratione eaque illo minus cum, saepe totam vel nihil repellat nemo explicabo excepturi consectetur. Modi omnis minus sequi maiores, provident voluptates."
         />
       </Form.Group>
 
@@ -62,16 +72,8 @@ export default function AssignmentEditor() {
       <Form.Group className="mb-3">
         <Form.Label>Online Entry Options</Form.Label>
         <div>
-          <Form.Check
-            type="checkbox"
-            id="wd-text-entry"
-            label="Text Entry"
-          />
-          <Form.Check
-            type="checkbox"
-            id="wd-website-url"
-            label="Website URL"
-          />
+          <Form.Check type="checkbox" id="wd-text-entry" label="Text Entry" />
+          <Form.Check type="checkbox" id="wd-website-url" label="Website URL" />
           <Form.Check
             type="checkbox"
             id="wd-media-recordings"
