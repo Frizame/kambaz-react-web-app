@@ -1,21 +1,17 @@
-import { Button, Form, Row, Col } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { Form, Row, Col } from "react-bootstrap";
+import { Link, useParams } from "react-router-dom";
 import * as db from "../../Database";
 
 export default function AssignmentEditor() {
   const { aid } = useParams();
   const assignments = db.assignments;
+  const assignment = assignments.find((assignment) => assignment._id === aid);
 
   return (
     <Form id="wd-assignments-editor">
       <Form.Group className="mb-3" controlId="wd-name">
         <Form.Label>Assignment Name</Form.Label>
-        <Form.Control
-          type="text"
-          defaultValue={
-            assignments.find((assignment) => assignment._id === aid)?.title
-          }
-        />
+        <Form.Control type="text" defaultValue={assignment?.title} />
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="wd-description">
@@ -127,8 +123,18 @@ export default function AssignmentEditor() {
       <hr />
 
       <div className="text-end">
-        <Button className="btn-secondary me-2">Cancel</Button>
-        <Button className="btn-red">Save</Button>
+        <Link
+          to={`/Kambaz/Courses/${assignment?.course}/Assignments`}
+          className="btn btn-secondary me-2"
+        >
+          Cancel
+        </Link>
+        <Link
+          to={`/Kambaz/Courses/${assignment?.course}/Assignments`}
+          className="btn btn-danger"
+        >
+          Save
+        </Link>
       </div>
     </Form>
   );
