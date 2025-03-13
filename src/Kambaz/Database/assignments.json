@@ -1,11 +1,92 @@
 [
-  { "_id": "A101", "title": "Propulsion Assignment", "course": "RS101"},
-  { "_id": "A102", "title": "Combustion Analysis", "course": "RS101" },
-  { "_id": "A103", "title": "Nozzle Design Project", "course": "RS101" },
-  { "_id": "A201", "title": "Aerodynamics Quiz", "course": "RS102" },
-  { "_id": "A202", "title": "Flow Analysis", "course": "RS102" },
-  { "_id": "A203", "title": "Heating Analysis", "course": "RS102" },
-  { "_id": "A301", "title": "Structural Design Task", "course": "RS103" },
-  { "_id": "A302", "title": "Orbital Calculations", "course": "RS103" },
-  { "_id": "A303", "title": "Systems Engineering Exam", "course": "RS103" }
+  {
+    "_id": "A101",
+    "title": "Propulsion Assignment",
+    "course": "RS101",
+    "description": "Analyze and design a rocket propulsion system.",
+    "points": 100,
+    "due": "2025-04-01",
+    "from": "2025-03-01",
+    "to": "2025-03-31"
+  },
+  {
+    "_id": "A102",
+    "title": "Combustion Analysis",
+    "course": "RS101",
+    "description": "Conduct an in-depth combustion efficiency analysis.",
+    "points": 85,
+    "due": "2025-04-05",
+    "from": "2025-03-05",
+    "to": "2025-04-04"
+  },
+  {
+    "_id": "A103",
+    "title": "Nozzle Design Project",
+    "course": "RS101",
+    "description": "Design an optimal nozzle shape for maximum thrust efficiency.",
+    "points": 120,
+    "due": "2025-04-10",
+    "from": "2025-03-10",
+    "to": "2025-04-09"
+  },
+  {
+    "_id": "A201",
+    "title": "Aerodynamics Quiz",
+    "course": "RS102",
+    "description": "Test your knowledge of aerodynamic principles and calculations.",
+    "points": 50,
+    "due": "2025-03-20",
+    "from": "2025-03-01",
+    "to": "2025-03-19"
+  },
+  {
+    "_id": "A202",
+    "title": "Flow Analysis",
+    "course": "RS102",
+    "description": "Perform detailed flow simulations for various geometries.",
+    "points": 90,
+    "due": "2025-03-30",
+    "from": "2025-03-05",
+    "to": "2025-03-29"
+  },
+  {
+    "_id": "A203",
+    "title": "Heating Analysis",
+    "course": "RS102",
+    "description": "Analyze heat transfer in high-speed aerospace vehicles.",
+    "points": 100,
+    "due": "2025-04-02",
+    "from": "2025-03-10",
+    "to": "2025-04-01"
+  },
+  {
+    "_id": "A301",
+    "title": "Structural Design Task",
+    "course": "RS103",
+    "description": "Develop a lightweight yet sturdy structural frame for spacecraft.",
+    "points": 110,
+    "due": "2025-04-15",
+    "from": "2025-03-20",
+    "to": "2025-04-14"
+  },
+  {
+    "_id": "A302",
+    "title": "Orbital Calculations",
+    "course": "RS103",
+    "description": "Calculate precise orbital trajectories for satellites.",
+    "points": 95,
+    "due": "2025-04-20",
+    "from": "2025-03-25",
+    "to": "2025-04-19"
+  },
+  {
+    "_id": "A303",
+    "title": "Systems Engineering Exam",
+    "course": "RS103",
+    "description": "Comprehensive exam on systems engineering principles.",
+    "points": 150,
+    "due": "2025-04-25",
+    "from": "2025-04-01",
+    "to": "2025-04-24"
+  }
 ]
