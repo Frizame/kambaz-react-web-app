@@ -1,17 +1,30 @@
 import { Button, FormControl, InputGroup, ListGroup } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
-import ModuleControlButtons from "../Modules/ModuleControlButtons";
 import LessonControlButtons from "../Modules/LessonControlButtons";
-import { FaClipboard, FaPlus } from "react-icons/fa6";
+import { FaClipboard, FaPlus, FaTrash } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
-import { useParams } from "react-router-dom";
-import * as db from "../../Database";
-import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import GreenCheckmark from "../Modules/GreenCheckmark";
+import { IoEllipsisVertical } from "react-icons/io5";
+import { v4 as uuidv4 } from "uuid";
+import { deleteAssignment } from "./reducer";
 
 export default function Assignments() {
   const { cid } = useParams();
-  const assignments = db.assignments;
   const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "";
+    const date = new Date(dateString + "T00:00:00");
+    return date.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   return (
     <div>
@@ -32,7 +45,13 @@ export default function Assignments() {
               />
               Group
             </Button>
-            <Button id="wd-add-assignment" className="btn-red">
+            <Button
+              id="wd-add-assignment"
+              className="btn-danger"
+              onClick={(_) =>
+                navigate(`/Kambaz/Courses/${cid}/Assignments/${uuidv4()}`)
+              }
+            >
               <FaPlus
                 className="position-relative me-2"
                 style={{ bottom: "1px" }}
@@ -53,15 +72,8 @@ export default function Assignments() {
               ASSIGNMENTS 40% of Total
             </div>
             <div>
-              <ModuleControlButtons
-                moduleId={""}
-                deleteModule={function (moduleId: string): void {
-                  throw new Error("Function not implemented.");
-                }}
-                editModule={function (moduleId: string): void {
-                  throw new Error("Function not implemented.");
-                }}
-              />
+              <GreenCheckmark />
+              <IoEllipsisVertical className="fs-4" />
             </div>
           </div>
 
@@ -82,12 +94,30 @@ export default function Assignments() {
                   )) || (
                     <span className="black-text"> {assignment.title} </span>
                   )}
+
                   <LessonControlButtons />
+                  {currentUser.role === "FACULTY" && (
+                    <FaTrash
+                      className="text-danger me-3 mt-1 float-end"
+                      onClick={() => {
+                        const confirmed = window.confirm(
+                          `Are you sure you want to delete "${assignment.title}"?`
+                        );
+                        if (confirmed) {
+                          dispatch(deleteAssignment(assignment._id));
+                        }
+                      }}
+                    />
+                  )}
                   <br />
-                  <span className="red-text"> Multiple Modules </span>|{" "}
-                  <b>Not available until</b> May 6 at 12:00am |
-                  <br />
-                  <b>Due</b> May 13 at 11:59pm | 100pts
+                  <div>
+                    <span className="red-text ms-4 mt-2"> Multiple Modules </span>|{" "}
+                    <b>Not available until</b> {formatDate(assignment.from)} at
+                    12:00am |
+                    <br />
+                    <b className="ms-4">Due</b> {formatDate(assignment.due)} at 11:59pm |{" "}
+                    {assignment.points} pts
+                  </div>
                 </ListGroup.Item>
               ))}
           </ListGroup>

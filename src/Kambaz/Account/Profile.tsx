@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentUser } from "./reducer";
@@ -81,7 +81,7 @@ export default function Profile() {
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="wd-role">
-          <Form.Select defaultValue="FACULTY">
+          <Form.Select value={profile.role}>
             <option value="USER">User</option>
             <option value="ADMIN">Admin</option>
             <option value="FACULTY">Faculty</option>
