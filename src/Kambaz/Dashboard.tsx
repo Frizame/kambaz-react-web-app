@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { Button, Card, Col, Row } from "react-bootstrap";
-import { useSelector } from "react-redux";
-import * as db from "./Database";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { addEnrollment, deleteEnrollment } from "./Enrollments/reducer";
+
 export default function Dashboard({
   courses,
   course,
@@ -18,18 +20,30 @@ export default function Dashboard({
   updateCourse: () => void;
 }) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const { enrollments } = db;
+  const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
 
-  const filteredCourses = courses.filter((course) =>
-    enrollments.some(
-      (enrollment) =>
-        enrollment.user === currentUser._id && enrollment.course === course._id
-    )
-  );
+  const [enrolling, setEnrolling] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const filteredCourses = enrolling || currentUser.role === "FACULTY"
+    ? courses
+    : courses.filter((course) =>
+        enrollments.some(
+          (enrollment: any) =>
+            enrollment.user === currentUser._id &&
+            enrollment.course === course._id
+        )
+      );
 
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
+      {currentUser.role === "STUDENT" && (
+        <Button className="float-end" onClick={() => setEnrolling(!enrolling)}>
+          {enrolling ? "Hide Enrollments" : "Show Enrollments"}
+        </Button>
+      )}
       {currentUser.role === "FACULTY" && (
         <h5 className="mb-5">
           New Course
@@ -93,6 +107,54 @@ export default function Dashboard({
                       {course.description}{" "}
                     </Card.Text>
                     <Button variant="primary"> Go </Button>
+
+                    {currentUser.role === "STUDENT" && enrolling === true && (
+                      <button
+                        onClick={
+                          enrollments.some(
+                            (enrollment: any) =>
+                              enrollment.user === currentUser._id &&
+                              enrollment.course === course._id
+                          )
+                            ? (event) => {
+                                event.preventDefault();
+                                dispatch(
+                                  deleteEnrollment({
+                                    user: currentUser._id,
+                                    course: course._id,
+                                  })
+                                );
+                              }
+                            : (event) => {
+                                event.preventDefault();
+                                dispatch(
+                                  addEnrollment({
+                                    user: currentUser._id,
+                                    course: course._id,
+                                  })
+                                );
+                              }
+                        }
+                        className={
+                          enrollments.some(
+                            (enrollment: any) =>
+                              enrollment.user === currentUser._id &&
+                              enrollment.course === course._id
+                          )
+                            ? "btn btn-danger float-end"
+                            : "btn btn-success float-end"
+                        }
+                        id="wd-delete-course-click"
+                      >
+                        {enrollments.some(
+                          (enrollment: any) =>
+                            enrollment.user === currentUser._id &&
+                            enrollment.course === course._id
+                        )
+                          ? "Unenroll"
+                          : "Enroll"}
+                      </button>
+                    )}
 
                     {currentUser.role === "FACULTY" && (
                       <button
