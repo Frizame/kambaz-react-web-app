@@ -4,8 +4,7 @@ import {
   ListGroup,
   ListGroupItem,
   Row,
-  Col,
-  Table,
+  Col
 } from "react-bootstrap";
 export default function ArrayStateVariable() {
   const [array, setArray] = useState([1, 2, 3, 4, 5]);
@@ -13,7 +12,7 @@ export default function ArrayStateVariable() {
     setArray([...array, Math.floor(Math.random() * 100)]);
   };
   const deleteElement = (index: number) => {
-    setArray(array.filter((item, i) => i !== index));
+    setArray(array.filter((_, i) => i !== index));
   };
 
   return (
