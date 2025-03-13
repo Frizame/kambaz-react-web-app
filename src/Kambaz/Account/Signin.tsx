@@ -1,7 +1,24 @@
-import { Link } from "react-router-dom";
-import { Form } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { setCurrentUser } from "./reducer";
+import { useDispatch } from "react-redux";
+import * as db from "../Database";
 
 export default function Signin() {
+  const [credentials, setCredentials] = useState<any>({});
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const signin = () => {
+    const user = db.users.find(
+      (u: any) =>
+        u.username === credentials.username &&
+        u.password === credentials.password
+    );
+    if (!user) return;
+    dispatch(setCurrentUser(user));
+    navigate("/Kambaz/Dashboard");
+  };
   return (
     <div
       id="wd-signin-screen"
@@ -12,16 +29,25 @@ export default function Signin() {
 
       <Form>
         <Form.Group className="mb-3" controlId="wd-username">
-          <Form.Control type="text" placeholder="username" />
+          <Form.Control
+            type="text"
+            placeholder="username"
+            value={credentials.username}
+            onChange={(e) =>
+              setCredentials({ ...credentials, username: e.target.value })
+            }
+          />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="wd-password">
-          <Form.Control type="password" placeholder="password" />
+          <Form.Control type="password" placeholder="password" value={credentials.password}
+onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+/>
         </Form.Group>
 
-        <Link className="link-button" to="/Kambaz/Dashboard">
+        <Button onClick={signin} id="wd-signin-btn" className="btn btn-primary w-100">
           Sign In
-        </Link>
+        </Button>
       </Form>
 
       <div className="mt-3">
