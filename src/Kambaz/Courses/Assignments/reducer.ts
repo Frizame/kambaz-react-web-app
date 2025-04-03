@@ -29,12 +29,12 @@ const assignmentsSlice = createSlice({
 
     deleteAssignment: (state, { payload: assignmentId }) => {
       state.assignments = state.assignments.filter(
-        (a) => a._id !== assignmentId
+        (a: any) => a._id !== assignmentId
       );
     },
 
     updateAssignment: (state, { payload: updatedAssignment }) => {
-      state.assignments = state.assignments.map((a) =>
+      state.assignments = state.assignments.map((a: any) =>
         a._id === updatedAssignment._id ? updatedAssignment : a
       );
     },
