@@ -1,12 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Link } from "react-router-dom";
 import { Button, Card, Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-import { addEnrollment, deleteEnrollment } from "./Enrollments/reducer";
+import { useEffect, useState } from "react";
+import { setEnrollments, addEnrollment, deleteEnrollment } from "./Enrollments/reducer";
+import * as enrollmentsClient from "./Enrollments/client"
 
 export default function Dashboard({
   courses,
   course,
+  allCourses,
   setCourse,
   addNewCourse,
   deleteCourse,
@@ -14,6 +17,7 @@ export default function Dashboard({
 }: {
   courses: any[];
   course: any;
+  allCourses: any[];
   setCourse: (course: any) => void;
   addNewCourse: () => void;
   deleteCourse: (course: any) => void;
@@ -26,7 +30,43 @@ export default function Dashboard({
 
   const dispatch = useDispatch();
 
-  const filteredCourses = courses;
+  const fetchEnrollments = async () => {
+    try {
+      const enrollments = await enrollmentsClient.findEnrollments();
+      dispatch(setEnrollments(enrollments));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const enroll = async (courseId: string) => {
+    try {
+      const enrollment = await enrollmentsClient.enroll(currentUser._id, courseId);
+      dispatch(addEnrollment(enrollment));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const unenroll = async (courseId: string) => {
+    try {
+      await enrollmentsClient.unenroll(currentUser._id, courseId);
+      dispatch(
+        deleteEnrollment({
+          user: currentUser._id,
+          course: courseId,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchEnrollments();
+  }, [currentUser]);
+
+  const filteredCourses = enrolling || currentUser.role === "FACULTY" ? allCourses : courses;
 
   return (
     <div id="wd-dashboard">
@@ -110,21 +150,11 @@ export default function Dashboard({
                           )
                             ? (event) => {
                                 event.preventDefault();
-                                dispatch(
-                                  deleteEnrollment({
-                                    user: currentUser._id,
-                                    course: course._id,
-                                  })
-                                );
+                                unenroll(course._id);
                               }
                             : (event) => {
                                 event.preventDefault();
-                                dispatch(
-                                  addEnrollment({
-                                    user: currentUser._id,
-                                    course: course._id,
-                                  })
-                                );
+                                enroll(course._id);
                               }
                         }
                         className={
