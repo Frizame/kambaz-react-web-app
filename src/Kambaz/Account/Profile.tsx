@@ -101,7 +101,10 @@ export default function Profile() {
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="wd-role">
-            <Form.Select value={profile.role}>
+            <Form.Select
+              value={profile.role}
+              onChange={(e) => setProfile({ ...profile, role: e.target.value })}
+            >
               <option value="USER">User</option>
               <option value="ADMIN">Admin</option>
               <option value="FACULTY">Faculty</option>
