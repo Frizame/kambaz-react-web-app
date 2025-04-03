@@ -26,15 +26,7 @@ export default function Dashboard({
 
   const dispatch = useDispatch();
 
-  const filteredCourses = enrolling || currentUser.role === "FACULTY"
-    ? courses
-    : courses.filter((course) =>
-        enrollments.some(
-          (enrollment: any) =>
-            enrollment.user === currentUser._id &&
-            enrollment.course === course._id
-        )
-      );
+  const filteredCourses = courses;
 
   return (
     <div id="wd-dashboard">

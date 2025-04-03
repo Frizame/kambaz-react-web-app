@@ -1,24 +1,40 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Routes, Route, Navigate } from "react-router";
 import Account from "./Account";
 import Dashboard from "./Dashboard";
 import KambazNavigation from "./Navigation";
 import Courses from "./Courses";
+import Session from "./Account/Session";
 import "./style.css";
 
 // Bootstrap imports for collapsed menus
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
-import * as db from "./Database";
-import { useState } from "react";
+import * as userClient from "./Account/client";
+import * as courseClient from "./Courses/client";
+
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import ProtectedRoute from "./Account/ProtectedRoute";
 import { useDispatch, useSelector } from "react-redux";
 import { addEnrollment } from "./Enrollments/reducer";
 
 export default function Kambaz() {
+  const [courses, setCourses] = useState<any[]>([]);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const [courses, setCourses] = useState<any[]>(db.courses);
+  const fetchCourses = async () => {
+    try {
+      const courses = await userClient.findMyCourses();
+      setCourses(courses);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchCourses();
+  }, [currentUser]);
+
   const [course, setCourse] = useState<any>({
     _id: "1234",
     name: "New Course",
@@ -28,17 +44,18 @@ export default function Kambaz() {
     description: "New Description",
     image: "course.jpg",
   });
-  const dispatch = useDispatch();
-  
-  const addNewCourse = () => {
-    const id = uuidv4()
-    setCourses([...courses, { ...course, _id: id }]);
-    dispatch(addEnrollment({user: currentUser._id, course: id}))
+
+  const addNewCourse = async () => {
+    const newCourse = await userClient.createCourse(course);
+    setCourses([...courses, newCourse]);
   };
-  const deleteCourse = (courseId: any) => {
+
+  const deleteCourse = async (courseId: string) => {
+    const status = await courseClient.deleteCourse(courseId);
     setCourses(courses.filter((course) => course._id !== courseId));
   };
-  const updateCourse = () => {
+  const updateCourse = async () => {
+    await courseClient.updateCourse(course);
     setCourses(
       courses.map((c) => {
         if (c._id === course._id) {
@@ -50,42 +67,44 @@ export default function Kambaz() {
     );
   };
   return (
-    <div id="wd-kambaz">
-      <Routes>
-        <Route path="/*" element={<KambazNavigation />}></Route>
-      </Routes>
-
-      <div className="wd-main-content-offset-left wd-main-content-offset-top p-3">
+    <Session>
+      <div id="wd-kambaz">
         <Routes>
-          <Route path="/" element={<Navigate to="Account" />} />
-          <Route path="/Account/*" element={<Account />} />
-          <Route
-            path="/Dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard
-                  courses={courses}
-                  course={course}
-                  setCourse={setCourse}
-                  addNewCourse={addNewCourse}
-                  deleteCourse={deleteCourse}
-                  updateCourse={updateCourse}
-                />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/Courses/:cid/*"
-            element={
-              <ProtectedRoute>
-                <Courses courses={courses} />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/Calendar" element={<h1>Calendar</h1>} />
-          <Route path="/Inbox" element={<h1>Inbox</h1>} />
+          <Route path="/*" element={<KambazNavigation />}></Route>
         </Routes>
+
+        <div className="wd-main-content-offset-left wd-main-content-offset-top p-3">
+          <Routes>
+            <Route path="/" element={<Navigate to="Account" />} />
+            <Route path="/Account/*" element={<Account />} />
+            <Route
+              path="/Dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard
+                    courses={courses}
+                    course={course}
+                    setCourse={setCourse}
+                    addNewCourse={addNewCourse}
+                    deleteCourse={deleteCourse}
+                    updateCourse={updateCourse}
+                  />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/Courses/:cid/*"
+              element={
+                <ProtectedRoute>
+                  <Courses courses={courses} />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/Calendar" element={<h1>Calendar</h1>} />
+            <Route path="/Inbox" element={<h1>Inbox</h1>} />
+          </Routes>
+        </div>
       </div>
-    </div>
+    </Session>
   );
 }
