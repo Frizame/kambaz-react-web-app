@@ -19,6 +19,7 @@ export default function Assignments() {
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const isModerator = currentUser.role === "FACULTY" || currentUser.role === "ADMIN";
 
   const fetchAssignmentsForCourse = async () => {
     try {
@@ -63,7 +64,7 @@ export default function Assignments() {
           <FormControl placeholder="Search..." />
         </InputGroup>
 
-        {currentUser.role === "FACULTY" && (
+        {isModerator && (
           <div>
             <Button id="wd-add-assignment-group" className="btn-secondary me-2">
               <FaPlus
@@ -111,7 +112,7 @@ export default function Assignments() {
                 <ListGroup.Item className="wd-lesson p-3 ps-1">
                   <BsGripVertical className="me-2 fs-3" />
                   <FaClipboard className="me-2 fs-3" />
-                  {(currentUser.role === "FACULTY" && (
+                  {(isModerator && (
                     <a
                       href={`#/Kambaz/Courses/${cid}/Assignments/${assignment._id}`}
                       className="wd-assignment-link ms-2 text-decoration-none"
@@ -123,7 +124,7 @@ export default function Assignments() {
                   )}
 
                   <LessonControlButtons />
-                  {currentUser.role === "FACULTY" && (
+                  {isModerator && (
                     <FaTrash
                       className="text-danger me-3 mt-1 float-end"
                       onClick={() => {

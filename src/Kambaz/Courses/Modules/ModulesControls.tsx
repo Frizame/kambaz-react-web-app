@@ -15,9 +15,10 @@ export default function ModulesControls({
   addModule: () => void;
 }) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const isModerator = currentUser.role === "FACULTY" || currentUser.role === "ADMIN";
   return (
     <div id="wd-modules-controls" className="text-nowrap">
-      {currentUser.role === "FACULTY" && (
+      {isModerator && (
         <>
           <Button
             variant="danger"

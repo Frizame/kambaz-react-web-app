@@ -26,7 +26,7 @@ export default function Kambaz() {
 
   const fetchCourses = async () => {
     try {
-      const courses = await userClient.findMyCourses();
+      const courses = await userClient.findCoursesForUser(currentUser._id);
       setCourses(courses);
       const allCourses = await courseClient.fetchAllCourses();
       setAllCourses(allCourses);
@@ -49,7 +49,7 @@ export default function Kambaz() {
   });
 
   const addNewCourse = async () => {
-    const newCourse = await userClient.createCourse(course);
+    const newCourse = await courseClient.createCourse(course);
     setCourses([...courses, newCourse]);
   };
 

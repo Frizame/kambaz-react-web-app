@@ -5,9 +5,10 @@ import { useSelector } from "react-redux";
 
 export default function Home() {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const isModerator = currentUser.role === "FACULTY" || currentUser.role === "ADMIN";
   return (
     <div id="wd-home">
-      {currentUser.role === "FACULTY" && (
+      {isModerator && (
         <>
           <nav className="navbar navbar-light d-xl-none mt-3">
             <div className="container-fluid">
@@ -37,7 +38,7 @@ export default function Home() {
         <div className="flex-fill me-3">
           <Modules />
         </div>
-        {currentUser.role === "FACULTY" && (
+        {isModerator && (
           <div className="d-none d-xl-block">
             <CourseStatus />
           </div>

@@ -14,9 +14,10 @@ export default function ModuleControlButtons({
   editModule: (moduleId: string) => void;
 }) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const isModerator = currentUser.role === "FACULTY" || currentUser.role === "ADMIN";
   return (
     <div className="float-end">
-      {currentUser.role === "FACULTY" && (
+      {isModerator && (
         <>
           <FaPencil
             onClick={() => editModule(moduleId)}

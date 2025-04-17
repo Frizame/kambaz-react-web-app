@@ -12,8 +12,8 @@ export default function Profile() {
   const navigate = useNavigate();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const updateProfile = async () => {
-    const updatedProfile = await client.updateUser(profile);
-    dispatch(setCurrentUser(updatedProfile));
+    await client.updateUser(profile);
+    dispatch(setCurrentUser(profile));
   };
   const fetchProfile = () => {
     if (!currentUser) return navigate("/Kambaz/Account/Signin");

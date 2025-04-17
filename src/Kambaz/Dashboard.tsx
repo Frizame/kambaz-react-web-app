@@ -66,17 +66,20 @@ export default function Dashboard({
     fetchEnrollments();
   }, [currentUser]);
 
-  const filteredCourses = enrolling || currentUser.role === "FACULTY" ? allCourses : courses;
+  const isModerator = currentUser.role === "FACULTY" || currentUser.role === "ADMIN";
+  const isStudent = currentUser.role === "STUDENT";
+
+  const filteredCourses = enrolling ? allCourses : courses;
 
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
-      {currentUser.role === "STUDENT" && (
+      {isStudent && (
         <Button className="float-end" onClick={() => setEnrolling(!enrolling)}>
-          {enrolling ? "Hide Enrollments" : "Show Enrollments"}
+          {enrolling ? "My Courses" : "All Courses"}
         </Button>
       )}
-      {currentUser.role === "FACULTY" && (
+      {isModerator && (
         <h5 className="mb-5">
           New Course
           <br />
@@ -140,7 +143,7 @@ export default function Dashboard({
                     </Card.Text>
                     <Button variant="primary"> Go </Button>
 
-                    {currentUser.role === "STUDENT" && enrolling === true && (
+                    {isStudent && enrolling === true && (
                       <button
                         onClick={
                           enrollments.some(
@@ -178,7 +181,7 @@ export default function Dashboard({
                       </button>
                     )}
 
-                    {currentUser.role === "FACULTY" && (
+                    {isModerator && (
                       <button
                         onClick={(event) => {
                           event.preventDefault();
@@ -190,7 +193,7 @@ export default function Dashboard({
                         Delete
                       </button>
                     )}
-                    {currentUser.role === "FACULTY" && (
+                    {isModerator && (
                       <button
                         id="wd-edit-course-click"
                         onClick={(event) => {
