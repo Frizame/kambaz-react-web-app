@@ -47,7 +47,8 @@ export default function Assignments() {
 
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
-    const date = new Date(dateString + "T00:00:00");
+    const date = new Date(dateString);
+    date.setHours(date.getHours() + 5); // believe that time zone causing issues, adding 5 hours to fix
     return date.toLocaleDateString("en-US", {
       month: "long",
       day: "numeric",

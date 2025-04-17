@@ -13,12 +13,20 @@ export default function AssignmentEditor() {
   const navigate = useNavigate();
   const [isNew, setIsNew] = useState(false);
 
+  const formatInputDate = (date: Date | number | string) =>
+    new Date(date).toISOString().split("T")[0];
+
   useEffect(() => {
     const foundAssignment = assignments.find(
       (assignment: any) => assignment._id === aid
     );
     if (foundAssignment) {
-      setAssignment(foundAssignment);
+      setAssignment({
+        ...foundAssignment,
+        due: formatInputDate(foundAssignment.due),
+        from: formatInputDate(foundAssignment.from),
+        to: formatInputDate(foundAssignment.to),
+      });
     } else {
       setIsNew(true);
       setAssignment({
@@ -26,6 +34,9 @@ export default function AssignmentEditor() {
         course: cid,
         description: "Enter description...",
         points: 100,
+        due: formatInputDate(Date.now()),
+        from: formatInputDate(Date.now()),
+        to: formatInputDate(Date.now()),
       });
     }
   }, []);
