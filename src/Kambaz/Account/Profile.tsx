@@ -15,9 +15,14 @@ export default function Profile() {
     await client.updateUser(profile);
     dispatch(setCurrentUser(profile));
   };
+  const formatInputDate = (date: string | Date) => {
+    if (!date) return "";
+    return new Date(date).toISOString().split("T")[0];
+  };
   const fetchProfile = () => {
     if (!currentUser) return navigate("/Kambaz/Account/Signin");
-    setProfile(currentUser);
+    const formattedDOB = currentUser.dob ? formatInputDate(currentUser.dob) : "";
+    setProfile({ ...currentUser, dob: formattedDOB });
   };
   const signout = async () => {
     await client.signout();
