@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, FormControl, InputGroup, ListGroup } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
 import LessonControlButtons from "../Modules/LessonControlButtons";
@@ -8,7 +9,9 @@ import { useDispatch, useSelector } from "react-redux";
 import GreenCheckmark from "../Modules/GreenCheckmark";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { v4 as uuidv4 } from "uuid";
-import { deleteAssignment } from "./reducer";
+import { deleteAssignment, setAssignments } from "./reducer";
+import * as assignmentsClient from "./client";
+import { useEffect } from "react";
 
 export default function Assignments() {
   const { cid } = useParams();
@@ -16,6 +19,30 @@ export default function Assignments() {
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const fetchAssignmentsForCourse = async () => {
+    try {
+      const data = await assignmentsClient.fetchAssignmentsForCourse(cid!);
+      dispatch(setAssignments(data));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const deleteAssignmentFromCourse = async (assignmentId: string) => {
+    try {
+      await assignmentsClient.deleteAssignment(assignmentId);
+      dispatch(deleteAssignment(assignmentId));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (cid) {
+      fetchAssignmentsForCourse();
+    }
+  }, [cid]);
 
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
@@ -48,7 +75,7 @@ export default function Assignments() {
             <Button
               id="wd-add-assignment"
               className="btn-danger"
-              onClick={(_) =>
+              onClick={() =>
                 navigate(`/Kambaz/Courses/${cid}/Assignments/${uuidv4()}`)
               }
             >
@@ -104,19 +131,22 @@ export default function Assignments() {
                           `Are you sure you want to delete "${assignment.title}"?`
                         );
                         if (confirmed) {
-                          dispatch(deleteAssignment(assignment._id));
+                          deleteAssignmentFromCourse(assignment._id);
                         }
                       }}
                     />
                   )}
                   <br />
                   <div>
-                    <span className="red-text ms-4 mt-2"> Multiple Modules </span>|{" "}
-                    <b>Not available until</b> {formatDate(assignment.from)} at
-                    12:00am |
+                    <span className="red-text ms-4 mt-2">
+                      {" "}
+                      Multiple Modules{" "}
+                    </span>
+                    | <b>Not available until</b> {formatDate(assignment.from)}{" "}
+                    at 12:00am |
                     <br />
-                    <b className="ms-4">Due</b> {formatDate(assignment.due)} at 11:59pm |{" "}
-                    {assignment.points} pts
+                    <b className="ms-4">Due</b> {formatDate(assignment.due)} at
+                    11:59pm | {assignment.points} pts
                   </div>
                 </ListGroup.Item>
               ))}

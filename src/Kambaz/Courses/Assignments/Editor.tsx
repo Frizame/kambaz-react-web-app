@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addAssignment, updateAssignment } from "./reducer";
+import * as assignmentsClient from "./client";
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
@@ -12,40 +13,51 @@ export default function AssignmentEditor() {
   const navigate = useNavigate();
   const [isNew, setIsNew] = useState(false);
 
-  
-
   useEffect(() => {
-    
-    const foundAssignment = assignments.find((assignment: any) => assignment._id === aid);
-    if (foundAssignment)
-    {
+    const foundAssignment = assignments.find(
+      (assignment: any) => assignment._id === aid
+    );
+    if (foundAssignment) {
       setAssignment(foundAssignment);
-    }
-    else
-    {
+    } else {
       setIsNew(true);
       setAssignment({
         title: "New Assignment",
         course: cid,
         description: "Enter description...",
         points: 100,
-      })
+      });
     }
   }, []);
 
   const goBack = () => {
     navigate(`/Kambaz/Courses/${assignment?.course}/Assignments`);
-  }
-
-  const add = () => {
-    dispatch(addAssignment(assignment));
-    goBack();
   };
 
-  const update = () => {
-    dispatch(updateAssignment(assignment));
-    goBack();
-  }
+  const add = async () => {
+    try {
+      const newAssignment = await assignmentsClient.createAssignmentForCourse(
+        cid!,
+        assignment
+      );
+      dispatch(addAssignment(newAssignment));
+      goBack();
+    } catch (err) {
+      console.error("Failed to add assignment:", err);
+    }
+  };
+
+  const update = async () => {
+    try {
+      const updatedAssignment = await assignmentsClient.updateAssignment(
+        assignment
+      );
+      dispatch(updateAssignment(updatedAssignment));
+      goBack();
+    } catch (err) {
+      console.error("Failed to update assignment:", err);
+    }
+  };
 
   return (
     <Form id="wd-assignments-editor">
@@ -196,16 +208,10 @@ export default function AssignmentEditor() {
       <hr />
 
       <div className="text-end">
-        <Button
-          onClick={goBack}
-          className="btn btn-secondary me-2"
-        >
+        <Button onClick={goBack} className="btn btn-secondary me-2">
           Cancel
         </Button>
-        <Button
-          className="btn btn-danger"
-          onClick={isNew ? add : update}
-        >
+        <Button className="btn btn-danger" onClick={isNew ? add : update}>
           Save
         </Button>
       </div>
