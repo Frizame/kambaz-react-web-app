@@ -7,7 +7,7 @@ export default function ProtectedRoute({ children }: { children: any }) {
   const { cid } = useParams();
 
   if (currentUser) {
-    if (currentUser.role === "STUDENT" && pathname.includes("Course")) {
+    if (currentUser.role === "STUDENT" || currentUser.role === "FACULTY" && pathname.includes("Course")) {
       if (
         enrollments.some(
           (enrollment: any) =>

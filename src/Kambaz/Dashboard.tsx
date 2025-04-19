@@ -66,7 +66,8 @@ export default function Dashboard({
     fetchEnrollments();
   }, [currentUser]);
 
-  const isModerator = currentUser.role === "FACULTY" || currentUser.role === "ADMIN";
+  const isFaculty = currentUser.role === "FACULTY";
+  const isModerator = isFaculty || currentUser.role === "ADMIN";
   const isStudent = currentUser.role === "STUDENT";
 
   const filteredCourses = enrolling ? allCourses : courses;

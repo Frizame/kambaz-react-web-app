@@ -1,14 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as client from "./client";
 import { useDispatch } from "react-redux";
 import { setCurrentUser } from "./reducer";
-import { FormControl } from "react-bootstrap";
+import { FormControl, FormSelect } from "react-bootstrap";
 export default function Signup() {
   const [user, setUser] = useState<any>({});
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const defaultRole = "STUDENT";
+  useEffect(() => {
+    setUser({...user, role: defaultRole})
+  }, [])
   const signup = async () => {
     const currentUser = await client.signup(user);
     dispatch(setCurrentUser(currentUser));
@@ -30,6 +34,16 @@ export default function Signup() {
         placeholder="password"
         type="password"
       />
+      <FormSelect
+        value={user.role}
+        onChange={(e) => setUser({ ...user, role: e.target.value })}
+        className="b-2 mb-2"
+      >
+        <option value="USER">User</option>
+        <option value="ADMIN">Admin</option>
+        <option value="FACULTY">Faculty</option>
+        <option value="STUDENT">Student</option>
+      </FormSelect>
       <button
         onClick={signup}
         className="wd-signup-btn btn btn-primary mb-2 w-100"
