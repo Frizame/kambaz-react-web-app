@@ -25,7 +25,6 @@ export default function CourseNavigation() {
           {link}
         </Link>
       ))}
-      ;
     </div>
   );
 }
