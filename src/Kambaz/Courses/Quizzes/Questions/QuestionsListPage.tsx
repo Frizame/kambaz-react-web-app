@@ -4,7 +4,11 @@ import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import QuestionEditor from "./Editor";
-import { addQuestion, deleteQuestion as deleteQuestionAction, setQuestions } from "./reducer";
+import {
+  addQuestion,
+  deleteQuestion as deleteQuestionAction,
+  setQuestions,
+} from "./reducer";
 import * as quizzesClient from "../client";
 
 export default function QuestionsListPage() {
@@ -13,7 +17,9 @@ export default function QuestionsListPage() {
   const { questions } = useSelector((state: any) => state.questionsReducer);
   const quizQuestions = questions.filter((q: any) => q.quizId === qid);
 
-  const [editingQuestionId, setEditingQuestionId] = useState<string | null>(null);
+  const [editingQuestionId, setEditingQuestionId] = useState<string | null>(
+    null
+  );
   const [justAddedId, setJustAddedId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -61,18 +67,22 @@ export default function QuestionsListPage() {
   };
 
   const handleDelete = async (questionId: string) => {
-    const confirmed = window.confirm("Are you sure you want to delete this question?");
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this question?"
+    );
     if (!confirmed) return;
     await quizzesClient.deleteQuestion(questionId);
     dispatch(deleteQuestionAction(questionId));
   };
 
-  const totalPoints = quizQuestions.reduce((sum: any, q: any) => sum + (q.points || 0), 0);
+  const totalPoints = quizQuestions.reduce(
+    (sum: any, q: any) => sum + (q.points || 0),
+    0
+  );
 
   return (
     <div className="p-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h3>Questions</h3>
+      <div className="d-flex justify-content-end">
         <Button onClick={handleNewQuestion} variant="danger">
           + New Question
         </Button>
@@ -94,10 +104,7 @@ export default function QuestionsListPage() {
               />
             ) : (
               <div>
-                <QuestionEditor
-                  questionId={q._id}
-                  editing={false}
-                />
+                <QuestionEditor questionId={q._id} editing={false} />
                 <div className="text-end mt-3">
                   <Button
                     variant="outline-secondary"
