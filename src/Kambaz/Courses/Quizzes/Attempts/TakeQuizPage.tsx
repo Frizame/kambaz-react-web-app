@@ -130,6 +130,8 @@ export default function TakeQuizPage() {
     );
   }
 
+  const editButton = <Button variant="secondary" onClick={() => navigate(`../Quizzes/${qid}`)}>Edit</Button>;
+
   return (
     <div className="p-4">
       <h3 className="mb-3">{quiz?.title}</h3>
@@ -178,7 +180,7 @@ export default function TakeQuizPage() {
               >
                 Next
               </Button>
-              {isModerator && <Button variant="secondary" onClick={() => navigate(`../Quizzes/${qid}`)}>Edit</Button>}
+              {isModerator && editButton}
             </div>
           ) : (
             <div>
@@ -186,7 +188,7 @@ export default function TakeQuizPage() {
                 Submit Quiz
               </Button>
 
-              {isModerator && <Button variant="secondary" onClick={() => navigate(`../Quizzes/${qid}`)}>Edit</Button>}
+              {isModerator && editButton}
             </div>
           )}
         </div>
@@ -195,7 +197,7 @@ export default function TakeQuizPage() {
           <Button className="me-2" variant="danger" onClick={handleSubmit}>
             Submit Quiz
           </Button>
-          {isModerator && <Button variant="secondary">Edit</Button>}
+          {isModerator && editButton}
         </div>
       )}
     </div>
