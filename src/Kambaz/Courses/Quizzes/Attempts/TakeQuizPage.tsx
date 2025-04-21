@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Button, Form } from "react-bootstrap";
 import QuestionResponse from "./QuestionResponse";
@@ -21,6 +21,7 @@ export default function TakeQuizPage() {
   const [attempt, setAttempt] = useState<any | null>(null);
   const [accessCodeInput, setAccessCodeInput] = useState("");
   const [accessCodeValid, setAccessCodeValid] = useState(!quiz?.accessCode);
+  const navigate = useNavigate();
 
   const isModerator =
     currentUser.role === "FACULTY" || currentUser.role === "ADMIN";
@@ -177,7 +178,7 @@ export default function TakeQuizPage() {
               >
                 Next
               </Button>
-              {isModerator && <Button variant="secondary">Edit</Button>}
+              {isModerator && <Button variant="secondary" onClick={() => navigate(`../Quizzes/${qid}`)}>Edit</Button>}
             </div>
           ) : (
             <div>
@@ -185,7 +186,7 @@ export default function TakeQuizPage() {
                 Submit Quiz
               </Button>
 
-              {isModerator && <Button variant="secondary">Edit</Button>}
+              {isModerator && <Button variant="secondary" onClick={() => navigate(`../Quizzes/${qid}`)}>Edit</Button>}
             </div>
           )}
         </div>

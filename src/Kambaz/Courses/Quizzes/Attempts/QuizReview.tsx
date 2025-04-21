@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Card } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
+import { Button, Card } from "react-bootstrap";
 import * as quizzesClient from "../client";
 import { useSelector } from "react-redux";
 
@@ -8,7 +8,10 @@ export default function QuizReview({ attempt: propAttempt }: { attempt?: any }) 
   const { qid } = useParams();
   const [attempt, setAttempt] = useState<any>(propAttempt || null);
   const [quiz, setQuiz] = useState<any>(null);
+  const navigate = useNavigate();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const isModerator =
+    currentUser.role === "FACULTY" || currentUser.role === "ADMIN";
 
   useEffect(() => {
     const loadData = async () => {
@@ -86,9 +89,11 @@ export default function QuizReview({ attempt: propAttempt }: { attempt?: any }) 
                 )}
               </>
             )}
+            
           </Card>
         );
       })}
+      {isModerator && <Button variant="secondary" className="float-end" onClick={() => navigate(`../Quizzes/${qid}`)}>Edit</Button>}
     </div>
   );
 }
