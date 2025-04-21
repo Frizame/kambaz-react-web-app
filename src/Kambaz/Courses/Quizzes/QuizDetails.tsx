@@ -82,7 +82,7 @@ export default function QuizDetails({
     setLocalQuiz({ ...localQuiz, [key]: value });
   };
 
-  const totalPoints = quiz.questions.reduce(
+  const totalPoints = (quiz.questions ?? localQuiz.questions ?? []).reduce(
     (sum: any, q: any) => sum + (q.points || 0),
     0
   );
