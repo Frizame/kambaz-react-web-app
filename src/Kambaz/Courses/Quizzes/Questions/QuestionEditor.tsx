@@ -4,8 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import MultipleChoiceEditor from "./MultipleChoiceEditor.tsx";
 import TrueFalseEditor from "./TrueFalseEditor.tsx";
 import FillInTheBlankEditor from "./FillInTheBlankEditor.tsx";
-import { updateQuestion } from "./reducer";
-import * as quizzesClient from "../client";
+import { updateQuestion } from "./reducer.ts";
+import * as quizzesClient from "../client.ts";
+import ReactQuill from "react-quill";
 
 export default function QuestionEditor({ questionId, editing = true, onCancel, onSave }: { questionId?: string; editing?: boolean; onCancel?: () => void; onSave?: () => void }) {
   const dispatch = useDispatch();
@@ -56,14 +57,12 @@ export default function QuestionEditor({ questionId, editing = true, onCancel, o
       <Form.Group className="mb-3">
         <b>Body</b>
         {editing ? (
-          <Form.Control
-            as="textarea"
-            rows={4}
+          <ReactQuill
             value={question.question}
-            onChange={(e) => setQuestion({ ...question, question: e.target.value })}
+            onChange={(value) => setQuestion({ ...question, question: value })}
           />
         ) : (
-          <div>{question.question}</div>
+          <div dangerouslySetInnerHTML={{ __html: question.question }} />
         )}
       </Form.Group>
 

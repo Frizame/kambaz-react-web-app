@@ -1,19 +1,23 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Nav } from "react-bootstrap";
 import QuestionsListPage from "./Questions/QuestionsListPage";
 import QuizDetails from "./QuizDetails";
 import * as quizzesClient from "./client";
 import { useDispatch, useSelector } from "react-redux";
 import { addQuiz } from "./reducer";
+import QuizReview from "./Attempts/QuizReview";
+import StudentGrades from "./Attempts/StudentGrades";
 
-export default function QuizView() {
+export default function QuizView({users} : {users: any}) {
   const { qid, cid } = useParams();
+  const pathname = useLocation().pathname;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { quizzes } = useSelector((state: any) => state.quizzesReducer);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const isModerator = currentUser.role === "FACULTY" || currentUser.role === "ADMIN";
+  const isModerator =
+    currentUser.role === "FACULTY" || currentUser.role === "ADMIN";
 
   const [activeTab, setActiveTab] = useState("details");
   const [quiz, setQuiz] = useState<any>(null);
@@ -79,30 +83,59 @@ export default function QuizView() {
 
   return (
     <div className="p-4">
-      <Nav variant="tabs" activeKey={activeTab} onSelect={(k) => setActiveTab(k!)}>
+      <Nav
+        variant="tabs"
+        activeKey={activeTab}
+        onSelect={(k) => setActiveTab(k!)}
+      >
         <Nav.Item>
-          <Nav.Link className="text-danger" eventKey="details">Details</Nav.Link>
+          <Nav.Link className="text-danger" eventKey="details">
+            Details
+          </Nav.Link>
         </Nav.Item>
         {isModerator && (
           <Nav.Item>
-            <Nav.Link className="text-danger" eventKey="questions">Questions</Nav.Link>
+            <Nav.Link className="text-danger" eventKey="questions">
+              Questions
+            </Nav.Link>
           </Nav.Item>
-
         )}
         {isModerator && (
           <Nav.Item>
-            <Nav.Link className="text-danger" eventKey="grades">Grades</Nav.Link>
+            <Nav.Link className="text-danger" eventKey="grades">
+              Scores
+            </Nav.Link>
+          </Nav.Item>
+        )}
+
+        {!isModerator && (
+          <Nav.Item>
+            <Nav.Link className="text-danger" eventKey="lastAttempt">
+              Last Attempt
+            </Nav.Link>
           </Nav.Item>
         )}
       </Nav>
 
-      {quiz && activeTab === "details" && <QuizDetails quiz={quiz} setQuiz={setQuiz} />}
+      {quiz && activeTab === "details" && (
+        <QuizDetails
+          quiz={quiz}
+          setQuiz={setQuiz}
+          edit={pathname.includes("edit")}
+        />
+      )}
 
       {activeTab === "questions" && isModerator && <QuestionsListPage />}
 
-      {activeTab === "grades" && (
+      {activeTab === "grades" && isModerator && (
         <div className="mt-3 ms-3">
-          <p>This section will display student grades in the future.</p>
+          <StudentGrades users={users} quizId={qid!}/>
+        </div>
+      )}
+
+      {activeTab === "lastAttempt" && (
+        <div className="mt-3 ms-3">
+          <QuizReview />
         </div>
       )}
     </div>

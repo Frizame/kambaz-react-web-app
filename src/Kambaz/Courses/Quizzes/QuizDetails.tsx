@@ -1,29 +1,67 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useEffect, useState } from "react";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import { updateQuiz } from "./reducer";
 import * as quizzesClient from "./client";
 
 export default function QuizDetails({
   quiz,
   setQuiz,
+  edit,
 }: {
   quiz: any;
   setQuiz: (q: any) => void;
+  edit: boolean;
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const pathname = useLocation().pathname;
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const isModerator =
     currentUser.role === "FACULTY" || currentUser.role === "ADMIN";
 
-  const [editing, setEditing] = useState(false);
+  const [editing, setEditing] = useState(edit);
   const [localQuiz, setLocalQuiz] = useState({ ...quiz });
+  const [attemptsLeft, setAttemptsLeft] = useState<number | null>(null);
+  const [isClosed, setIsClosed] = useState(false);
 
   useEffect(() => {
     setLocalQuiz({ ...quiz });
   }, [quiz]);
+
+  useEffect(() => {
+    const fetchAttempts = async () => {
+      if (!isModerator) {
+        try {
+          const attempts = await quizzesClient.getAllAttemptsForUser(
+            quiz._id,
+            currentUser._id
+          );
+          const remaining = quiz.maxAttempts - attempts.length;
+          setAttemptsLeft(remaining);
+        } catch (err) {
+          console.error("Failed to load attempts", err);
+        }
+      }
+    };
+    fetchAttempts();
+  }, [quiz, currentUser, isModerator]);
+
+  useEffect(() => {
+    const now = new Date();
+    const untilDate = new Date(quiz.untilDate);
+    setIsClosed(now > untilDate);
+  }, [quiz]);
+
+  useEffect(() => {
+    if (edit)
+    {
+      navigate(pathname.slice(0, -5));
+    }
+  }, [])
 
   if (!quiz) return <div>Quiz not found.</div>;
 
@@ -32,6 +70,16 @@ export default function QuizDetails({
     dispatch(updateQuiz(updatedQuiz));
     setQuiz(updatedQuiz);
     setEditing(false);
+  };
+
+  const handlePublish = async () => {
+    const updatedQuiz = await quizzesClient.updateQuiz({
+      ...localQuiz,
+      isPublished: true,
+    });
+    dispatch(updateQuiz(updatedQuiz));
+    setQuiz(updatedQuiz);
+    navigate("../Quizzes");
   };
 
   const handleCancel = () => {
@@ -57,15 +105,15 @@ export default function QuizDetails({
         )}
       </h2>
       {editing ? (
-        <Form.Control
-          as="textarea"
-          rows={3}
+        <ReactQuill
           value={localQuiz.description}
-          onChange={(e) => updateField("description", e.target.value)}
+          onChange={(value: any) => updateField("description", value)}
         />
       ) : (
-        <p>{quiz.description}</p>
+        <div dangerouslySetInnerHTML={{ __html: quiz.description }} />
       )}
+
+      <br />
 
       {isModerator && (
         <>
@@ -92,7 +140,9 @@ export default function QuizDetails({
                 <Form.Select
                   value={localQuiz.assignmentGroup}
                   disabled={!editing}
-                  onChange={(e) => updateField("assignmentGroup", e.target.value)}
+                  onChange={(e) =>
+                    updateField("assignmentGroup", e.target.value)
+                  }
                 >
                   <option value="Quizzes">Quizzes</option>
                   <option value="Exams">Exams</option>
@@ -166,7 +216,9 @@ export default function QuizDetails({
               label="Multiple Attempts"
               checked={localQuiz.multipleAttempts}
               disabled={!editing}
-              onChange={(e) => updateField("multipleAttempts", e.target.checked)}
+              onChange={(e) =>
+                updateField("multipleAttempts", e.target.checked)
+              }
             />
             {localQuiz.multipleAttempts && (
               <Form.Group className="mt-2 mb-2">
@@ -184,14 +236,18 @@ export default function QuizDetails({
               label="Show Correct Answers"
               checked={localQuiz.showCorrectAnswers}
               disabled={!editing}
-              onChange={(e) => updateField("showCorrectAnswers", e.target.checked)}
+              onChange={(e) =>
+                updateField("showCorrectAnswers", e.target.checked)
+              }
             />
             <Form.Check
               type="checkbox"
               label="One Question at a Time"
               checked={localQuiz.oneQuestionAtATime}
               disabled={!editing}
-              onChange={(e) => updateField("oneQuestionAtATime", e.target.checked)}
+              onChange={(e) =>
+                updateField("oneQuestionAtATime", e.target.checked)
+              }
             />
             <Form.Check
               type="checkbox"
@@ -223,10 +279,26 @@ export default function QuizDetails({
         </>
       )}
 
-      {currentUser.role === "STUDENT" && (
-        <div className="text-end">
-          <Button variant="danger" onClick={() => navigate("take")}>Start Quiz</Button>
+      {!isModerator && attemptsLeft !== null && !isClosed && (
+        <div className="mb-3">
+          <strong>
+            {attemptsLeft > 0
+              ? `Attempts Remaining: ${attemptsLeft}`
+              : "Quiz Completed"}
+          </strong>
         </div>
+      )}
+
+      {!isModerator && attemptsLeft! > 0 && !isClosed && (
+        <div className="text-end">
+          <Button variant="danger" onClick={() => navigate("take")}>
+            Start Quiz
+          </Button>
+        </div>
+      )}
+
+      {!isModerator && isClosed && attemptsLeft !== 0 && (
+        <div className="text-muted mb-3">Quiz Closed</div>
       )}
 
       {isModerator && (
@@ -237,10 +309,13 @@ export default function QuizDetails({
                 Save
               </Button>
               <Button
-                variant="secondary"
-                onClick={handleCancel}
+                variant="primary"
                 className="me-2"
+                onClick={handlePublish}
               >
+                Publish
+              </Button>
+              <Button variant="secondary" onClick={handleCancel}>
                 Cancel
               </Button>
             </>
@@ -253,10 +328,7 @@ export default function QuizDetails({
               >
                 Edit
               </Button>
-              <Button
-                variant="secondary"
-                onClick={() => navigate("preview")}
-              >
+              <Button variant="secondary" onClick={() => navigate("take")}>
                 Preview
               </Button>
             </>

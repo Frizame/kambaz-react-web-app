@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
-import QuestionEditor from "./Editor";
+import QuestionEditor from "./QuestionEditor";
 import {
   addQuestion,
   deleteQuestion as deleteQuestionAction,
@@ -107,14 +107,14 @@ export default function QuestionsListPage() {
                 <QuestionEditor questionId={q._id} editing={false} />
                 <div className="text-end mt-3">
                   <Button
-                    variant="outline-secondary"
+                    variant="secondary"
                     className="me-2"
                     onClick={() => setEditingQuestionId(q._id)}
                   >
                     Edit
                   </Button>
                   <Button
-                    variant="outline-danger"
+                    variant="danger"
                     onClick={() => handleDelete(q._id)}
                   >
                     Delete
