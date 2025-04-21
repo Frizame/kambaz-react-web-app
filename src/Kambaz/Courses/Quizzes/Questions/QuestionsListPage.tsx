@@ -11,7 +11,13 @@ import {
 } from "./reducer";
 import * as quizzesClient from "../client";
 
-export default function QuestionsListPage() {
+export default function QuestionsListPage({
+  quiz,
+  setQuiz,
+}: {
+  quiz: any;
+  setQuiz: (q: any) => void;
+}) {
   const { qid } = useParams();
   const dispatch = useDispatch();
   const { questions } = useSelector((state: any) => state.questionsReducer);
@@ -28,6 +34,7 @@ export default function QuestionsListPage() {
       try {
         const data = await quizzesClient.fetchQuizById(qid);
         dispatch(setQuestions(data.questions));
+        setQuiz({ ...quiz, questions: data.questions });
       } catch (error) {
         console.error("Failed to load questions", error);
       }
@@ -49,6 +56,7 @@ export default function QuestionsListPage() {
     };
     const newQuestion = await quizzesClient.addQuestionToQuiz(qid!, question);
     dispatch(addQuestion(newQuestion));
+    setQuiz({ ...quiz, questions: [...quiz.questions, newQuestion] });
     setJustAddedId(newId);
   };
 
@@ -61,9 +69,16 @@ export default function QuestionsListPage() {
     }
   };
 
-  const handleSave = () => {
-    setEditingQuestionId(null);
-    setJustAddedId(null);
+  const handleSave = async () => {
+    try {
+      const data = await quizzesClient.fetchQuizById(qid!);
+      dispatch(setQuestions(data.questions));
+      setQuiz({ ...quiz, questions: data.questions });
+      setEditingQuestionId(null);
+      setJustAddedId(null);
+    } catch (err) {
+      console.error("Failed to refresh questions", err);
+    }
   };
 
   const handleDelete = async (questionId: string) => {
@@ -73,6 +88,10 @@ export default function QuestionsListPage() {
     if (!confirmed) return;
     await quizzesClient.deleteQuestion(questionId);
     dispatch(deleteQuestionAction(questionId));
+    setQuiz({
+      ...quiz,
+      questions: quiz.questions.filter((q: any) => q._id !== questionId),
+    });
   };
 
   const totalPoints = quizQuestions.reduce(
@@ -113,10 +132,7 @@ export default function QuestionsListPage() {
                   >
                     Edit
                   </Button>
-                  <Button
-                    variant="danger"
-                    onClick={() => handleDelete(q._id)}
-                  >
+                  <Button variant="danger" onClick={() => handleDelete(q._id)}>
                     Delete
                   </Button>
                 </div>

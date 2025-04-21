@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useEffect, useState } from "react";
@@ -9,21 +9,18 @@ import * as quizzesClient from "./client";
 
 export default function QuizDetails({
   quiz,
-  setQuiz,
-  edit,
+  setQuiz
 }: {
   quiz: any;
   setQuiz: (q: any) => void;
-  edit: boolean;
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const pathname = useLocation().pathname;
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const isModerator =
     currentUser.role === "FACULTY" || currentUser.role === "ADMIN";
 
-  const [editing, setEditing] = useState(edit);
+  const [editing, setEditing] = useState(false);
   const [localQuiz, setLocalQuiz] = useState({ ...quiz });
   const [attemptsLeft, setAttemptsLeft] = useState<number | null>(null);
   const [isClosed, setIsClosed] = useState(false);
@@ -56,17 +53,11 @@ export default function QuizDetails({
     setIsClosed(now > untilDate);
   }, [quiz]);
 
-  useEffect(() => {
-    if (edit)
-    {
-      navigate(pathname.slice(0, -5));
-    }
-  }, [])
-
   if (!quiz) return <div>Quiz not found.</div>;
 
   const handleUpdate = async () => {
-    const updatedQuiz = await quizzesClient.updateQuiz(localQuiz);
+    await quizzesClient.updateQuiz(localQuiz);
+    const updatedQuiz = await quizzesClient.fetchQuizById(quiz._id);
     dispatch(updateQuiz(updatedQuiz));
     setQuiz(updatedQuiz);
     setEditing(false);
@@ -91,6 +82,11 @@ export default function QuizDetails({
     setLocalQuiz({ ...localQuiz, [key]: value });
   };
 
+  const totalPoints = quiz.questions.reduce(
+    (sum: any, q: any) => sum + (q.points || 0),
+    0
+  );
+
   return (
     <div className="mt-3 ms-3 me-3">
       <h2>
@@ -112,9 +108,8 @@ export default function QuizDetails({
       ) : (
         <div dangerouslySetInnerHTML={{ __html: quiz.description }} />
       )}
-
+      <div className="mt-3">Total Points: {totalPoints}</div>
       <br />
-
       {isModerator && (
         <>
           <Row>
@@ -313,7 +308,7 @@ export default function QuizDetails({
                 className="me-2"
                 onClick={handlePublish}
               >
-                Publish
+                Save & Publish
               </Button>
               <Button variant="secondary" onClick={handleCancel}>
                 Cancel

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Nav } from "react-bootstrap";
 import QuestionsListPage from "./Questions/QuestionsListPage";
 import QuizDetails from "./QuizDetails";
@@ -11,7 +11,6 @@ import StudentGrades from "./Attempts/StudentGrades";
 
 export default function QuizView({users} : {users: any}) {
   const { qid, cid } = useParams();
-  const pathname = useLocation().pathname;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { quizzes } = useSelector((state: any) => state.quizzesReducer);
@@ -118,18 +117,16 @@ export default function QuizView({users} : {users: any}) {
       </Nav>
 
       {quiz && activeTab === "details" && (
-        <QuizDetails
-          quiz={quiz}
-          setQuiz={setQuiz}
-          edit={pathname.includes("edit")}
-        />
+        <QuizDetails quiz={quiz} setQuiz={setQuiz} />
       )}
 
-      {activeTab === "questions" && isModerator && <QuestionsListPage />}
+      {activeTab === "questions" && isModerator && (
+        <QuestionsListPage quiz={quiz} setQuiz={setQuiz} />
+      )}
 
       {activeTab === "grades" && isModerator && (
         <div className="mt-3 ms-3">
-          <StudentGrades users={users} quizId={qid!}/>
+          <StudentGrades users={users} quizId={qid!} />
         </div>
       )}
 

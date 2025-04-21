@@ -124,7 +124,7 @@ export default function Quizzes() {
             id="wd-add-quiz"
             className="btn-danger"
             onClick={() =>
-              navigate(`/Kambaz/Courses/${cid}/Quizzes/${uuidv4()}/edit`)
+              navigate(`/Kambaz/Courses/${cid}/Quizzes/${uuidv4()}`)
             }
           >
             <FaPlus
@@ -177,7 +177,7 @@ export default function Quizzes() {
                           <Dropdown.Item
                             onClick={() =>
                               navigate(
-                                `/Kambaz/Courses/${cid}/Quizzes/${quiz._id}/edit`
+                                `/Kambaz/Courses/${cid}/Quizzes/${quiz._id}`
                               )
                             }
                           >
